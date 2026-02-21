@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Performance AI Manager</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+</head>
+<body>
+    <div id="overlay" class="overlay"></div>
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+        </div>
+        <ul class="list-unstyled components">
+            <li><a href="#" class="nav-link active" data-tab="home"><i class="fas fa-home"></i> <span data-lang-key="home">Home</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="general"><i class="fas fa-cogs"></i> <span data-lang-key="general">General</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="settings"><i class="fas fa-sliders-h"></i> <span data-lang-key="settings">Settings</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="advanced"><i class="fas fa-tools"></i> <span data-lang-key="advanced">Advanced</span></a></li>
+            <li id="os-tunning-nav-item" style="display: none;"><a href="#" class="nav-link" data-tab="os_tunning"><i class="fab fa-android"></i> <span data-lang-key="os_tunning">OS Tunning</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="launcher"><i class="fas fa-rocket"></i> <span data-lang-key="launcher_settings">Launcher Settings</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="developer"><i class="fas fa-code"></i> <span data-lang-key="developer">Developer</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="cpu_trace"><i class="fas fa-microchip"></i> <span data-lang-key="cpu_trace">CPU Trace</span></a></li>
+            <li><a href="#" class="nav-link" data-tab="webui_settings"><i class="fas fa-server"></i> <span data-lang-key="webui_settings">WebUI Settings</span></a></li>
+            <li class="sidebar-theme-toggle">
+                <div class="mode-toggle">
+                    <i class="fas fa-sun mode-icon light-icon"></i>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                    <i class="fas fa-moon mode-icon dark-icon"></i>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header class="card-block header-block">
+            <button id="hamburger-menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-controls">
+                 <div class="bar-selection lang-selection" id="lang-selection-bar">
+                    <span class="selected-value" id="lang-selected-value">EN</span>
+                    <div class="available-options">
+                        <button class="option-button" data-lang="en">English</button>
+                        <button class="option-button" data-lang="id">Bahasa Indonesia</button>
+                        <button class="option-button" data-lang="ar">العربية</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main id="home-tab" class="tab-content active">
+            <div class="profile-banner card-block">
+                <img id="service-banner" src="/img/stopped.webp" alt="Performance AI Banner" class="banner-img">
+                <div class="lite-mode-toggle-container">
+                    <label for="lite-mode-toggle" data-lang-key="lite_mode">Lite Mode</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="lite-mode-toggle" data-file="settings.ini" data-key="lite_mode" data-on="1" data-off="0">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <i class="fas fa-info-circle" data-info-key="lite_mode_info"></i>
+                </div>
+            </div>
+
+            <div class="main-status-block card-block">
+                <div class="status-details">
+                    <h2><span data-lang-key="performance_ai_status">Performance AI Status</span></h2>
+                    <p><span data-lang-key="service_status">Service Status</span>: <span id="service-status" class="status-badge status-unknown">Loading...</span></p>
+                    <p>PID: <span id="service-pid">Loading...</span></p>
+                    <p><span data-lang-key="running_for">Running for</span>: <span id="running-time">Loading...</span></p>
+                    <p><span data-lang-key="cpu_usage">CPU Usage</span>: <span id="cpu-usage">Loading...</span></p>
+                    <p><span data-lang-key="system_cpu_load">System CPU Load</span>: <span id="system-cpu-load">Loading...</span></p>
+                    <p><span data-lang-key="ram_usage">RAM Usage</span>: <span id="ram-usage">Loading...</span></p>
+                    <p><span data-lang-key="current_profile">Current Profile</span>: <span id="current-profile-mode">Loading...</span></p>
+                    <button class="action-button refresh-status-button" id="refresh-button">
+                        <i class="fas fa-sync-alt"></i> <span data-lang-key="refresh">Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-block card-block">
+                <h2><i class="fas fa-cogs"></i> <span data-lang-key="main_actions">Main Actions</span></h2>
+                <div class="button-group">
+                    <button class="action-button" data-command="install"><i class="fas fa-download"></i> <span data-lang-key="install">Install</span></button>
+                    <button class="action-button" data-command="uninstall"><i class="fas fa-trash-alt"></i> <span data-lang-key="uninstall">Uninstall</span></button>
+                    <button class="action-button" data-command="reload-settings"><i class="fas fa-sync"></i> <span data-lang-key="reload">Reload</span></button>
+                    <button class="action-button danger-button" id="exit-button"><i class="fas fa-power-off"></i> <span data-lang-key="exit">Exit</span></button>
+                </div>
+            </div>
+            
+            <div class="community-support-block card-block">
+                 <h2><i class="fas fa-users"></i> <span data-lang-key="community_support">Community & Support</span></h2>
+                 <div class="button-group">
+                     <a href="https://t.me/Youngupdatesource" target="_blank" class="action-button telegram-button">
+                         <i class="fab fa-telegram-plane"></i> <span data-lang-key="join_telegram">Join Us on Telegram</span>
+                     </a>
+                     <a href="https://sociabuzz.com/reljawa/tribe" target="_blank" class="action-button support-button">
+                         <i class="fas fa-heart"></i> <span data-lang-key="support_me">Support Me</span>
+                     </a>
+                 </div>
+            </div>
+
+            <div class="info-log-block card-block">
+                <div class="info-text-content">
+                    <h2><i class="fas fa-info-circle"></i> <span data-lang-key="device_module_info">Device & Module Info</span></h2>
+                    <p><strong><span data-lang-key="module">Module</span>:</strong> <span id="module-name">N/A</span> (<span id="module-version">N/A</span>) by <span id="module-developer">N/A</span></p>
+                    <p><strong><span data-lang-key="status">Status</span>:</strong> <span id="module-status">N/A</span> | <strong><span data-lang-key="plugins">Plugins</span>:</strong> <span id="module-plugins">N/A</span></p>
+                    <div id="credits-block">
+                        <p><strong><span data-lang-key="credits">Credits</span>:</strong> <span id="module-credits">N/A</span></p>
+                        <p class="webui-inspiration"><strong><span data-lang-key="webui_inspiration">WebUI Inspiration</span>:</strong> @Rem01Gaming @RiProG (Telegram)</p>
+                    </div>
+                    <hr>
+                    <p><strong><span data-lang-key="device">Device</span>:</strong> <span id="device-brand">N/A</span> <span id="device-name">N/A</span> (<span id="device-architecture">N/A</span>)</p>
+                    <p><strong>OS:</strong> <span id="device-os-name">N/A</span> | Android <span id="device-android-version">N/A</span> (SDK <span id="device-sdk-version">N/A</span>) | <strong>Kernel:</strong> <span id="device-kernel-version">N/A</span></p>
+                </div>
+            </div>
+        </main>
+        
+        <div id="general-tab" class="tab-content">
+            <div class="control-grid">
+                <div class="control-block card-block">
+                    <div class="setting-item">
+                        <label><i class="fas fa-moon"></i> <span data-lang-key="doze">Doze Optimization</span> <i class="fas fa-info-circle" data-info-key="doze_info"></i></label>
+                        <label class="toggle-switch"><input type="checkbox" id="doze-toggle"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-mobile-alt"></i> <span data-lang-key="device_config_opt">Device Config Opt</span> <i class="fas fa-info-circle" data-info-key="device_config_opt_info"></i></label>
+                        <label class="toggle-switch"><input type="checkbox" id="device-config-opt-toggle"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-comment-slash"></i> <span data-lang-key="silent_log">Silent Log</span> <i class="fas fa-info-circle" data-info-key="silent_log_info"></i></label>
+                        <label class="toggle-switch"><input type="checkbox" id="silent-log-toggle"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-hdd"></i> <span data-lang-key="fstrim">Filesystem Trim</span> <i class="fas fa-info-circle" data-info-key="fstrim_info"></i></h2>
+                    <button class="action-button" data-command="fstrim"><span data-lang-key="run_fstrim">Run Fstrim</span></button>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-hand-pointer"></i> <span data-lang-key="touch">Touch Enhancement</span> <i class="fas fa-info-circle" data-info-key="touch_info"></i></h2>
+                    <div class="selection-group">
+                        <div class="bar-selection" id="touch-selection-bar">
+                            <span class="selected-value" id="touch-selected-value">Reset</span>
+                            <div class="available-options" id="touch-available-options">
+                                <button class="option-button" data-param="high"><span data-lang-key="high">High</span></button>
+                                <button class="option-button" data-param="medium"><span data-lang-key="medium">Medium</span></button>
+                                <button class="option-button" data-param="low"><span data-lang-key="low">Low</span></button>
+                                <button class="option-button" data-param="reset">Reset</button>
+                            </div>
+                        </div>
+                        <button class="action-button" id="touch-apply-button"><span data-lang-key="apply">Apply</span></button>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-gamepad"></i> <span data-lang-key="driver">Driver Selection</span> <i class="fas fa-info-circle" data-info-key="driver_info"></i></h2>
+                    <div class="selection-group">
+                        <div class="bar-selection" id="driver-selection-bar">
+                            <span class="selected-value" id="driver-selected-value">Reset</span>
+                            <div class="available-options" id="driver-available-options">
+                                <button class="option-button" data-param="game"><span data-lang-key="game">Game</span></button>
+                                <button class="option-button" data-param="prelease"><span data-lang-key="pre-release">Pre-release</span></button>
+                                <button class="option-button" data-param="angle">Angle</button>
+                                <button class="option-button" data-param="reset">Reset</button>
+                            </div>
+                        </div>
+                        <button class="action-button" id="driver-apply-button"><span data-lang-key="apply">Apply</span></button>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-sync"></i> <span data-lang-key="swappy_delta">Swappy Delta</span> <i class="fas fa-info-circle" data-info-key="swappy_delta_info"></i></h2>
+                    <div class="selection-group">
+                        <div class="bar-selection" id="swappy-selection-bar">
+                            <span class="selected-value" id="swappy-selected-value">Stop</span>
+                            <div class="available-options" id="swappy-available-options">
+                                <button class="option-button" data-param="start"><span data-lang-key="start">Start</span></button>
+                                <button class="option-button" data-param="start-advanced"><span data-lang-key="start_advanced">Start-Advanced</span></button>
+                                <button class="option-button" data-param="stop"><span data-lang-key="stop">Stop</span></button>
+                            </div>
+                        </div>
+                        <button class="action-button" id="swappy-apply-button"><span data-lang-key="apply">Apply</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-tab" class="tab-content">
+            <div class="control-grid">
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-sliders-h"></i> <span data-lang-key="general_settings">General Settings</span></h2>
+                    <div class="setting-item">
+                        <label><span data-lang-key="just_in_time_mode">Just-In-Time Mode</span></label>
+                        <div class="bar-selection" data-file="settings.ini" data-key="just-in-time-mode">
+                            <span class="selected-value">default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="speed">Speed</button>
+                                <button class="option-button" data-value="speed-profile">Speed-Profile</button>
+                                <button class="option-button" data-value="everything">Everything</button>
+                                <button class="option-button" data-value="default">Default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="job_opt_info"></i> <span data-lang-key="job_opt">Job Opt</span></label>
+                        <div class="bar-selection" data-file="settings.ini" data-key="job_opt">
+                            <span class="selected-value">balanced</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="performance">Performance</button>
+                                <button class="option-button" data-value="saver">Battery Saver</button>
+                                <button class="option-button" data-value="balanced">Balanced</button>
+                                <button class="option-button" data-value="gaming_priority">Gaming Priority</button>
+                                <button class="option-button" data-value="background_restricted">BG Restricted</button>
+                                <button class="option-button" data-value="multitasking_priority">Multitasking</button>
+                                <button class="option-button" data-value="default">default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="cpu_reducer_info"></i> <span data-lang-key="cpu_reducer">CPU Reducer</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="cpu_reducer" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="egl_preloader_info"></i> <span data-lang-key="egl_preloader">EGL Preloader</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="egl_preloader" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="io_adjustment">I/O Adjustment</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="io_adjustment" data-on="active" data-off="inactive"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="window_logging_info"></i> <span data-lang-key="disable_window_logging">Disable Window Logging</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="window_logging" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="logcat_adjuster_info"></i> <span data-lang-key="logcat_adjuster">Logcat Adjustment</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="logcat_adjuster" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="dnd_info"></i> <span data-lang-key="dnd_while_gaming">DND While Gaming</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="dnd_if_gaming" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item" id="gapps-limiter-item">
+                        <label><i class="fas fa-info-circle" data-info-key="gapps_limiter_info"></i> <span data-lang-key="gapps_limiter">Gapps Limiter (Android 13+)</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="gapps_limiter" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                     <div class="setting-item" id="silent-trace-item">
+                        <label><i class="fas fa-info-circle" data-info-key="silent_trace_info"></i> <span data-lang-key="silent_trace">Silent Trace</span></label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" data-file="settings.ini" data-key="silent_trace" data-on="true" data-off="N">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                 <div class="control-block card-block">
+                    <h2><i class="fas fa-gamepad"></i> <span data-lang-key="game_manager">Game Manager</span></h2>
+                    <div class="setting-item">
+                        <label><span data-lang-key="pubg_config_enable">PUBG Mobile Global Config</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="game_manager.ini" data-key="pubg_config_enable" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="advanced-tab" class="tab-content">
+             <div class="advanced-settings-grid control-grid">
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-signal"></i> <span data-lang-key="network_locker">Network Locker</span></h2>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="network_locker_info"></i> <span data-lang-key="preferred_network_type">Preferred Network Type</span></label>
+                        <div class="bar-selection" data-file="advance_settings.ini" data-key="network_user_locker">
+                            <span class="selected-value">Default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="11"><span data-lang-key="net_4g_only">4G Only</span></button>
+                                <button class="option-button" data-value="20,32"><span data-lang-key="net_4g_5g">4G/5G</span></button>
+                                <button class="option-button" data-value="9">Reset</button>
+                                <button class="option-button" data-value="default">Default</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-cogs"></i> <span data-lang-key="advance_settings">Advance Settings</span></h2>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="swappy_delta_info"></i> <span data-lang-key="swappy_delta_rt_mode">Swappy-Delta RT Mode</span></label>
+                        <div class="bar-selection" data-file="advance_settings.ini" data-key="swappy-delta_rt">
+                            <span class="selected-value">stop</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="start-advanced">Start-Advanced</button>
+                                <button class="option-button" data-value="start">Start</button>
+                                <button class="option-button" data-value="stop">Stop</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="target_frame_rate_info"></i> <span data-lang-key="target_frame_rate">Target Frame Rate</span></label>
+                        <div class="bar-selection" data-file="advance_settings.ini" data-key="target_frame_rate">
+                            <span class="selected-value">default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="default">Default</button>
+                                <button class="option-button" data-value="60">60</button>
+                                <button class="option-button" data-value="90">90</button>
+                                <button class="option-button" data-value="120">120</button>
+                                <button class="option-button" data-value="144">144</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="downscale">Downscale</span></label>
+                        <div class="bar-selection" data-file="advance_settings.ini" data-key="downscale">
+                            <span class="selected-value">disable</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="0.3">0.3</button>
+                                <button class="option-button" data-value="0.35">0.35</button>
+                                <button class="option-button" data-value="0.4">0.4</button>
+                                <button class="option-button" data-value="0.45">0.45</button>
+                                <button class="option-button" data-value="0.5">0.5</button>
+                                <button class="option-button" data-value="0.55">0.55</button>
+                                <button class="option-button" data-value="0.6">0.6</button>
+                                <button class="option-button" data-value="0.65">0.65</button>
+                                <button class="option-button" data-value="0.7">0.7</button>
+                                <button class="option-button" data-value="0.75">0.75</button>
+                                <button class="option-button" data-value="0.8">0.8</button>
+                                <button class="option-button" data-value="0.85">0.85</button>
+                                <button class="option-button" data-value="0.9">0.9</button>
+                                <button class="option-button" data-value="disable">disable</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-memory"></i> <span data-lang-key="api_ram_settings">API & RAM Settings</span></h2>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="ram_manager_info"></i> <span data-lang-key="ram_manager_name">RAM Manager</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="ram_manager-toggle" data-file="settings.ini" data-key="ram_manager" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div id="dynamic-swap-item" class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="dynamic_swap_info"></i> <span data-lang-key="dynamic_swap">Dynamic Swap (Android 14+)</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="api_settings.ini" data-key="dynamic_swap_enabled" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="allowed_zram_used_info"></i> <span data-lang-key="allowed_zram_used">Allowed ZRAM Used (5-40%)</span></label>
+                        <div class="range-slider-group">
+                            <input type="range" min="5" max="40" value="20" class="range-slider" id="swap_threshold_adjust_perc-slider">
+                            <input type="number" class="range-value-input" id="swap_threshold_adjust_perc-input" data-file="api_settings.ini" data-key="swap_threshold_adjust_perc" min="5" max="40">
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="allow_whitelist_info"></i> <span data-lang-key="allow_kill_whitelist_apps">Allow Kill Whitelist Apps</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="settings.ini" data-key="allow_whitelist" data-on="yes" data-off="no"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item" id="allow-compaction-container">
+                        <label><i class="fas fa-info-circle" data-info-key="allow_compaction_info"></i> <span data-lang-key="allow_compaction">Allow Compaction</span></label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="allow-compaction-toggle" data-file="api_settings.ini" data-key="allow_compaction" data-on="Y" data-off="N">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item ram-dependent">
+                        <label><i class="fas fa-info-circle" data-info-key="warning_ram_info"></i> <span data-lang-key="warning_ram_perc">Warning RAM % (5-70)</span></label>
+                        <input type="number" class="range-value-input" id="warning_ram_perc-input" data-key="warning_ram_perc" min="5" max="70">
+                    </div>
+                    <div class="setting-item ram-dependent">
+                        <label><i class="fas fa-info-circle" data-info-key="critical_ram_info"></i> <span data-lang-key="critical_ram_perc">Critical RAM % (5-70)</span></label>
+                        <input type="number" class="range-value-input" id="critical_ram_perc-input" data-key="critical_ram_perc" min="5" max="70">
+                    </div>
+                    <div class="setting-item ram-dependent">
+                        <button class="action-button" id="save-ram-thresholds-btn"><i class="fas fa-save"></i> <span data-lang-key="save_ram_settings">Save RAM Thresholds</span></button>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="ram_manager_exec_delay_info"></i> <span data-lang-key="ram_manager_exec_delay">RAM Manager Exec Delay (1-120s)</span></label>
+                        <div class="range-slider-group">
+                            <input type="range" min="1" max="120" value="60" class="range-slider" id="exec_delay-slider">
+                            <input type="number" class="range-value-input" id="exec_delay-input" data-file="api_settings.ini" data-key="exec_delay">
+                        </div>
+                    </div>
+                     <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="ram_factor_info"></i> <span data-lang-key="ram_factor">RAM Factor</span></label>
+                        <div class="bar-selection" data-file="api_settings.ini" data-key="ram_mode">
+                            <span class="selected-value">safety</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="agresive">Aggressive</button>
+                                <button class="option-button" data-value="safety">Safety</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="use_trim_memory_info"></i> <span data-lang-key="use_trim_memory">Use Trim Memory</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="use_trim_memory-toggle" data-file="settings.ini" data-key="use_trim_memory" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="trim_memory_level_info"></i> <span data-lang-key="trim_memory_level">Trim Memory Level</span></label>
+                        <div class="bar-selection" data-file="settings.ini" data-key="trim_memory_level">
+                            <span class="selected-value">RUNNING_LOW</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="HIDDEN">HIDDEN</button>
+                                <button class="option-button" data-value="RUNNING_MODERATE">RUNNING_MODERATE</button>
+                                <button class="option-button" data-value="RUNNING_LOW">RUNNING_LOW</button>
+                                <button class="option-button" data-value="RUNNING_CRITICAL">RUNNING_CRITICAL</button>
+                                <button class="option-button" data-value="COMPLETE">COMPLETE</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="system_kill_info"></i> <span data-lang-key="system_kill">System Kill</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="api_settings.ini" data-key="kill_system_package" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="smart_power_saver_info"></i> <span data-lang-key="smart_power_saver">Smart Power Saver</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="adaptive_power_saver-toggle" data-file="api_settings.ini" data-key="adaptive_power_saver" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="game_preloading">Game Preloading</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="api_settings.ini" data-key="game_preloading" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="preload_size_limit_info"></i> <span data-lang-key="shader_preload_size">Shader Preload Size</span></label>
+                        <input type="text" class="text-input" data-file="api_settings.ini" data-key="Preload_size_limit">
+                        <p class="warning-text"><span data-lang-key="preload_warning">Warning: adjust the size or may get rebooted by low ram flag / kernel panic</span></p>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="quick_launch_info"></i> <span data-lang-key="quick_launch">Quick Launch</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="api_settings.ini" data-key="Quick_load" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-desktop"></i> <span data-lang-key="display_settings">Display Settings</span></h2>
+                    <div class="setting-item">
+                        <label><span data-lang-key="bypass_dynamic_refresh_rate">Bypass Dynamic Refresh Rate</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="bypass_dynamic_refresh_rate-toggle" data-file="display_settings.ini" data-key="bypass_dynamic_refresh_rate" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="device_refresh_rate">Device Refresh Rate</span></label>
+                        <div class="bar-selection" data-file="display_settings.ini" data-key="device_refresh_rate">
+                            <span class="selected-value">90</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="60">60</button>
+                                <button class="option-button" data-value="90">90</button>
+                                <button class="option-button" data-value="120">120</button>
+                                <button class="option-button" data-value="144">144</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="device_group_info"></i> <span data-lang-key="device_group">Device Group</span></label>
+                        <div class="bar-selection" data-file="display_settings.ini" data-key="device-group">
+                            <span class="selected-value">bbk</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="ubbk">ubbk</button>
+                                <button class="option-button" data-value="bbk">bbk</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-palette"></i> <span data-lang-key="render_settings">Render Settings</span></h2>
+                    <div class="setting-item">
+                        <label><span data-lang-key="hw_renderer">HW Renderer</span></label>
+                         <div class="bar-selection" data-file="render_settings.ini" data-key="hw_renderer">
+                            <span class="selected-value">default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="skiavk">SkiaVK</button>
+                                <button class="option-button" data-value="skiagl">SkiaGL</button>
+                                <button class="option-button" data-value="opengl">OpenGL</button>
+                                <button class="option-button" data-value="default">Default</button>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="setting-item">
+                        <label><span data-lang-key="hw_backend_renderer">HW Backend Renderer</span></label>
+                         <div class="bar-selection" data-file="render_settings.ini" data-key="hw_backend_renderer">
+                            <span class="selected-value">default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="threaded">Threaded</button>
+                                <button class="option-button" data-value="default">Default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="hw_composition">HW Composition</span></label>
+                         <div class="bar-selection" data-file="render_settings.ini" data-key="hw_composition">
+                            <span class="selected-value">default</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="default">Default</button>
+                                <button class="option-button" data-value="gpu">GPU</button>
+                                <button class="option-button" data-value="cpu">CPU</button>
+                                <button class="option-button" data-value="c2d">C2D</button>
+                                <button class="option-button" data-value="mdp">MDP</button>
+                                 <button class="option-button" data-value="hwc">HWC</button>
+                                <button class="option-button" data-value="dyn">DYN</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><span data-lang-key="smooth_gui">Smooth GUI</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="render_settings.ini" data-key="smooth_GUI" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="os_tunning-tab" class="tab-content">
+            <div class="control-grid" id="os-tunning-content">
+                <div id="miui-hyperos-settings" class="os-specific-settings" style="display: none;">
+                    <div class="control-block card-block">
+                        <h2>MIUI / HyperOS</h2>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="speed_mode_info"></i> <span data-lang-key="speed_mode">Enable Speed Mode</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="speed_mode" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="templimit_info"></i> <span data-lang-key="disable_templimit">Disable Temp Limit</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="hos_templimit_disabler" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="game_adj_info"></i> <span data-lang-key="game_adjustment">Game Adjustment</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="hos_game_adj" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="perf_enabler_info"></i> <span data-lang-key="perf_enabler">Perf Enabler</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="allow_perf_mode" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="xos-settings" class="os-specific-settings" style="display: none;">
+                    <div class="control-block card-block">
+                        <h2>XOS</h2>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="bypass_temp_warn_info"></i> <span data-lang-key="bypass_temp_warn">Bypass High Temp Warning</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="xos_bypass_hightemp_warn" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="user_exp_info"></i> <span data-lang-key="user_experience">Enable User Experience</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="xos_user_experience" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="perf_enabler_info"></i> <span data-lang-key="perf_enabler">Perf Enabler</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="allow_perf_mode" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="funtouchos-settings" class="os-specific-settings" style="display: none;">
+                    <div class="control-block card-block">
+                        <h2>FuntouchOS</h2>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="fos_hdr_disabler_info"></i> <span data-lang-key="fos_hdr_disabler">Disable HDR Format</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="fos_hdr_disabler" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="fos_network_acc_info"></i> <span data-lang-key="fos_network_acc">Enable Data Network Accelerate</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="fos_network_acc" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="perf_enabler_info"></i> <span data-lang-key="perf_enabler">Perf Enabler</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="allow_perf_mode" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="coloros-settings" class="os-specific-settings" style="display: none;">
+                    <div class="control-block card-block">
+                        <h2>ColorOS</h2>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="perf_enabler_info"></i> <span data-lang-key="perf_enabler">Perf Enabler</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="allow_perf_mode" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="setting-item">
+                            <label><i class="fas fa-info-circle" data-info-key="temp_protect_info"></i> <span data-lang-key="disable_temp_protect">Disable Temp Protect</span></label>
+                            <label class="toggle-switch"><input type="checkbox" data-file="os_settings.ini" data-key="cos_temp_protect_disabler" data-on="Y" data-off="N"><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="unsupported-os-settings" class="os-specific-settings" style="display: none;">
+                     <div class="control-block card-block">
+                        <p data-lang-key="no_os_settings">No specific tunning available for your OS at the moment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="launcher-tab" class="tab-content">
+            <div class="control-block card-block">
+                <h2><i class="fas fa-rocket"></i> <span data-lang-key="launcher_settings">Launcher Settings</span></h2>
+                <div class="setting-item">
+                    <label><i class="fas fa-info-circle" data-info-key="icon_quality_info"></i> <span data-lang-key="icon_quality">Icon Quality</span></label>
+                    <div class="range-slider-group">
+                        <input type="range" min="5" max="100" value="100" class="range-slider" id="icon_quality-slider">
+                        <input type="number" class="range-value-input" id="icon_quality-input" data-file="launcher_settings.ini" data-key="icon_quality" min="5" max="100">
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label><i class="fas fa-info-circle" data-info-key="icon_format_info"></i> <span data-lang-key="icon_format">Icon Format</span></label>
+                    <div class="bar-selection" data-file="launcher_settings.ini" data-key="icon_format">
+                        <span class="selected-value">PNG</span>
+                        <div class="available-options">
+                            <button class="option-button" data-value="PNG">PNG</button>
+                            <button class="option-button" data-value="WEBP">WEBP</button>
+                            <button class="option-button" data-value="JPEG">JPEG</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="developer-tab" class="tab-content">
+            <div class="advanced-settings-grid control-grid">
+                <div class="control-block card-block">
+                    <h2><i class="fas fa-code"></i> <span data-lang-key="dev_menu">Dev Menu</span></h2>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="debug_info"></i> <span data-lang-key="print_debugging_log">Print Debugging Log</span></label>
+                        <label class="toggle-switch"><input type="checkbox" data-file="dev_mode.settings" data-key="debug" data-on="true" data-off="false"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="swappy_api_debug_info"></i> <span data-lang-key="print_swappy_debug_log">Print Swappy-Delta Debugging Log</span></label>
+                        <div class="bar-selection" data-file="dev_mode.settings" data-key="swappy_api_debug">
+                            <span class="selected-value">false</span>
+                            <div class="available-options">
+                                <button class="option-button" data-value="true">True</button>
+                                <button class="option-button" data-value="false">False</button>
+                                <button class="option-button" data-value="false-silent">False-Silent</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="pararel_execution_conf_info"></i> <span data-lang-key="parallel_execution">Parallel Execution</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="pararel_execution_conf-toggle" data-file="dev_mode.settings" data-key="pararel_execution_conf" data-on="y" data-off="n"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="max_pararel_thread_info"></i> <span data-lang-key="max_parallel_threads">Max Parallel Threads</span></label>
+                        <div class="range-slider-group">
+                            <input type="range" min="1" max="8" value="4" class="range-slider" id="max_pararel_thread-slider">
+                            <input type="number" class="range-value-input" id="max_pararel_thread-input" data-file="dev_mode.settings" data-key="max_pararel_thread" min="1" max="8">
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="pararel_dir_perf_info"></i> <span data-lang-key="parallel_dir_perf">Parallel Dir (Performance)</span></label>
+                        <input type="text" class="text-input" placeholder="e.g., zt.sh,script.sh" data-file="dev_mode.settings" data-key="pararel_dir_perf" list="module-scripts-list">
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="pararel_dir_close_info"></i> <span data-lang-key="parallel_dir_balanced">Parallel Dir (Balanced)</span></label>
+                        <input type="text" class="text-input" placeholder="e.g., zt.sh,script.sh" data-file="dev_mode.settings" data-key="pararel_dir_close" list="module-scripts-list">
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="pararel_dir_startup_info"></i> <span data-lang-key="parallel_dir_startup">Parallel Dir (Startup)</span></label>
+                        <input type="text" class="text-input" placeholder="e.g., zt.sh,script.sh" data-file="dev_mode.settings" data-key="pararel_dir_startup" list="module-scripts-list">
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fas fa-info-circle" data-info-key="pararel_dir_closeup_info"></i> <span data-lang-key="parallel_dir_uninstall">Parallel Dir (Uninstall)</span></label>
+                        <input type="text" class="text-input" placeholder="e.g., zt.sh,script.sh" data-file="dev_mode.settings" data-key="pararel_dir_closeup" list="module-scripts-list">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cpu_trace-tab" class="tab-content">
+            <div class="control-block card-block">
+                <div class="cpu-trace-header">
+                    <h2><i class="fas fa-microchip"></i> <span data-lang-key="cpu_trace">CPU Trace</span></h2>
+                    <div class="cpu-trace-summary">
+                        <span data-lang-key="average_load">Average Load</span>: <strong id="cpu-avg-load">0%</strong>
+                    </div>
+                    <div class="control-header">
+                        <label data-lang-key="realtime_monitoring">Real-time Monitoring</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="cpu-trace-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <canvas id="cpu-usage-graph"></canvas>
+                <div id="cpu-trace-grid" class="cpu-trace-grid-new"></div>
+                <div class="top-processes-container">
+                    <h3 data-lang-key="top_processes">Top Processes</h3>
+                    <div id="cpu-top-processes"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="webui_settings-tab" class="tab-content">
+            <div class="control-block card-block">
+                <h2><i class="fas fa-server"></i> <span data-lang-key="webui_settings">WebUI Settings</span></h2>
+                <div class="setting-item">
+                    <label><i class="fas fa-info-circle" data-info-key="standby_info"></i> <span data-lang-key="standby_mode">Standby Mode</span></label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="standby-toggle" data-file="webui_config.ini" data-key="standby" data-on="true" data-off="false">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item" id="shutdown-time-item">
+                    <label><i class="fas fa-info-circle" data-info-key="shutdown_time_info"></i> <span data-lang-key="inactivity_shutdown_time">Inactivity Shutdown Time (minutes)</span></label>
+                    <div class="range-slider-group">
+                        <input type="range" min="5" max="120" value="30" class="range-slider" id="shutdowntime-slider">
+                        <input type="number" class="range-value-input" id="shutdowntime-input" data-file="webui_config.ini" data-key="shutdowntime" min="5" max="120">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <datalist id="module-scripts-list"></datalist>
+
+        <footer class="footer-credits glitch-text" data-text="Talk is cheap, show me the code. - Linus Torvalds">Talk is cheap, show me the code. - Linus Torvalds</footer>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <div id="shutdown-loader" class="modal-overlay" style="display: none;">
+        <div class="shutdown-content">
+            <div class="loader-spinner"></div>
+            <p data-lang-key="processing">Processing...</p>
+        </div>
+    </div>
+
+    <div id="launcher-warning-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content card-block">
+            <h2 data-lang-key="warning_title">Warning</h2>
+            <p data-lang-key="launcher_warning_text">This feature are experimental don't settings if you beginner may cause bug or Icons are not rendered because the Launcher does not support them or Launcher failed and crashing</p>
+            <div class="button-group" style="justify-content: flex-end;">
+                 <button id="launcher-warning-nevermind" class="action-button danger-button"><span data-lang-key="launcher_warning_nevermind">Nevermind</span></button>
+                <button id="launcher-warning-accept" class="action-button"><span data-lang-key="launcher_warning_accept">I'm not a beginner</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="exit-confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content card-block">
+            <h2 data-lang-key="exit_confirmation_title">Unapplied Changes</h2>
+            <p data-lang-key="exit_confirmation_body">You have unapplied settings that require a reload. What would you like to do?</p>
+            <div class="button-group">
+                <button id="exit-confirm-reload" class="action-button"><i class="fas fa-sync"></i> <span data-lang-key="reload_and_exit">Reload & Exit</span></button>
+                <button id="exit-confirm-continue" class="action-button danger-button"><i class="fas fa-power-off"></i> <span data-lang-key="exit_without_reload">Exit Without Reloading</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
